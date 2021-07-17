@@ -36,6 +36,33 @@
               </p>
             </a>
           </li>
+
+          <li class="nav-item has-treeview ">
+            <a href="{{ route('users.index') }}" class="nav-link {{ Route::is('user*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Usuários
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item has-treeview ">
+            <a href="{{ route('categorias.index') }}" class="nav-link {{ Route::is('categorias*') ? 'active' : '' }}">
+              <i class="nav-icon fa fa-list-alt"></i>
+              <p>
+                Categorias
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item has-treeview ">
+            <a href="{{ route('produtos.index') }}" class="nav-link {{ Route::is('produtos*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-shopping-bag"></i>
+              <p>
+                Produtos
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
