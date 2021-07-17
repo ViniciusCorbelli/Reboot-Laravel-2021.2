@@ -6,7 +6,7 @@
     @slot('title', 'Produtos')
     @slot('head')
         <th>Nome</th>
-        <th>Produtos</th>
+        <th>Preço</th>
         <th></th>
     @endslot
     @slot('body')

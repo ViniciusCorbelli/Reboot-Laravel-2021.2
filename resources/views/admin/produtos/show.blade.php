@@ -7,7 +7,7 @@
             @include('admin.produtos.form')
         @endslot
         @slot('back')
-            <a href="{{ route('produtos.edit', $produtos->id) }}" class="btn btn-primary float-right ml-1"><i class="fas fa-pen"></i> Editar</a>
+            <a href="{{ route('produtos.edit', $produto->id) }}" class="btn btn-primary float-right ml-1"><i class="fas fa-pen"></i> Editar</a>
             <a href="{{ route('produtos.index') }}" class="btn btn-dark float-right"><i class="fas fa-undo-alt"></i> Voltar</a>
         @endslot
     @endcomponent
