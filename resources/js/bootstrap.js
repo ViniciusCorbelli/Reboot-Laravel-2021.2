@@ -9,14 +9,8 @@ window._ = require('lodash');
 try {
     window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
-    window.moment = require('moment');
-    window.Swal = require('sweetalert2')
-    require('admin-lte');
+
     require('bootstrap');
-    require('jquery-mask-plugin');
-    require('datatables.net-bs4');
-    require('select2');
-    require('summernote');
 } catch (e) {}
 
 /**
