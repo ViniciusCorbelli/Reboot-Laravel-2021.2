@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Categorias;
+use App\Produtos;
 use Illuminate\Http\Request;
 
 class CategoriasController extends Controller
@@ -26,7 +27,8 @@ class CategoriasController extends Controller
     public function create()
     {
         $categoria = new Categorias();
-        return view('admin.categorias.create', compact('categoria'));
+        $produtos = Produtos::all();
+        return view('admin.categorias.create', compact('categoria', 'produtos'));
     }
 
     /**
@@ -37,8 +39,9 @@ class CategoriasController extends Controller
      */
     public function store(Request $request)
     {
-        Categorias::create($request->all());
-
+        $categoria = Categorias::create($request->except('produtos_id'));
+        //$categoria->produtos()->sync($request->produtos_id);
+        //$categoria->save();
         return redirect()->route('categorias.index')->with('sucess', true);
     }
 
@@ -61,7 +64,8 @@ class CategoriasController extends Controller
      */
     public function edit(Categorias $categoria)
     {
-        return view('admin.categorias.edit', compact('categoria'));
+        $produtos = Produtos::all();
+        return view('admin.categorias.edit', compact('categoria', 'produtos'));
     }
 
     /**
@@ -73,7 +77,9 @@ class CategoriasController extends Controller
      */
     public function update(Request $request, Categorias $categoria)
     {
-        $categoria->update($request->all());
+        $categoria->update($request->except('produtos_id'));
+        //$categoria->produtos()->sync($request->produtos_id);
+       // $categoria->save();
 
         return redirect()->route('categorias.index')->with('sucess', true);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Produtos;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -26,7 +27,8 @@ class UserController extends Controller
     public function create()
     {
         $user = new User();
-        return view('admin.users.create', compact('user'));
+        $produtos = Produtos::all();
+        return view('admin.users.create', compact('user', 'produtos'));
     }
 
     /**
@@ -37,9 +39,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        
+        $data = $request->except('produtos_id');
         $data['password'] = bcrypt($data['password']);
-        User::create($data);
+        $user = User::create($data);
+        $user->produtos()->syncWithoutDetaching([1 => ['nota' => 5]]);
+        $user->save();
 
         return redirect()->route('users.index')->with('sucess', true);
     }
@@ -63,7 +68,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $produtos = Produtos::all();
+        return view('admin.users.edit', compact('user', 'produtos'));
     }
 
     /**
@@ -75,10 +81,12 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $data = $request->all();
+        $data = $request->except('produtos_id');
         $data['password'] = bcrypt($data['password']);
-
+       
         $user->update($data);
+        $user->produtos()->syncWithoutDetaching($request->produtos_id);
+        $user->save();
 
         return redirect()->route('users.index')->with('sucess', true);
     }

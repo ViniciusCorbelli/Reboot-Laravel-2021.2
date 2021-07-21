@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Produtos;
+use App\Categorias;
+use App\User;
 use Illuminate\Http\Request;
 
 class ProdutosController extends Controller
@@ -26,7 +28,9 @@ class ProdutosController extends Controller
     public function create()
     {
         $produto = new Produtos();
-        return view('admin.produtos.create', compact('produto'));
+        $categorias = Categorias::all();
+        $users = User::all();
+        return view('admin.produtos.create', compact('produto', 'categorias', 'users'));
     }
 
     /**
@@ -37,7 +41,10 @@ class ProdutosController extends Controller
      */
     public function store(Request $request)
     {
-        Produtos::create($request->all());
+        $produto = Produtos::create($request->except('categoria_id', 'usuarios_id'));
+        $produto->categoria()->associate($request->categoria_id);
+        $produto->users()->sync($request->usuarios_id);
+        $produto->save();
 
         return redirect()->route('produtos.index')->with('sucess', true);
     }
@@ -61,7 +68,9 @@ class ProdutosController extends Controller
      */
     public function edit(Produtos $produto)
     {
-        return view('admin.produtos.edit', compact('produto'));
+        $categorias = Categorias::all();
+        $users = User::all();
+        return view('admin.produtos.edit', compact('produto', 'categorias', 'users'));
     }
 
     /**
@@ -73,8 +82,10 @@ class ProdutosController extends Controller
      */
     public function update(Request $request, Produtos $produto)
     {
-        $produto->update($request->all());
-
+        $produto->update($request->except('categoria_id', 'usuarios_id'));
+        $produto->categoria()->associate($request->categoria_id);
+        $produto->users()->syncWithoutDetaching($request->usuarios_id);
+        $produto->save();
         return redirect()->route('produtos.index')->with('sucess', true);
     }
 

@@ -17,8 +17,13 @@ class CreateProdutosTable extends Migration
             $table->id();
             $table->string('nome');
             $table->double('preco');
+
+            $table->unsignedBigInteger('categoria_id')->nullable();
+            $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('cascade');
+
             $table->timestamps();
         });
+
     }
 
     /**

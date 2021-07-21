@@ -15,6 +15,23 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
+//para ver suas rotas basta user php artisan route:list
+
+
+//domínio
+//Route::domain('{account}.example.com')->group(function () {
+
+
+
+//prefixo
+//Route::prefix('admin')->group(function () {
+
+//rotas que precisa estar logado para poder utilizar
+//Route::middleware('auth')->group(function () {
+
+
+Route::middleware('auth')->group(function () {
+
     Route::get('/', function () {
         return view('admin.layouts.app');
     })->name('dashboard');
@@ -22,3 +39,5 @@ Auth::routes();
     Route::resource('/users', 'UserController');
     Route::resource('/categorias', 'CategoriasController');
     Route::resource('/produtos', 'ProdutosController');
+    
+});
