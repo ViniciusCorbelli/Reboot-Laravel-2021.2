@@ -77,9 +77,17 @@ class CategoriasController extends Controller
      */
     public function update(Request $request, Categorias $categoria)
     {
-        $categoria->update($request->except('produtos_id'));
-        //$categoria->produtos()->sync($request->produtos_id);
-       // $categoria->save();
+        $categoria->update($request->except('produto_id'));
+
+        $produtos = [];
+        
+        foreach ($request->produto_id as $produto) {
+            $produtos[] = Produtos::find($produto);
+        }
+
+        $categoria->produtos()->saveMany($produtos);
+
+        $categoria->save();
 
         return redirect()->route('categorias.index')->with('sucess', true);
     }

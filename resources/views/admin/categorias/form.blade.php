@@ -7,7 +7,7 @@
         <label for="categoria" class="required">Categorias</label>
         <select  class="form-control" name="produto_id[]" value="" multiple>
             @foreach($produtos as $produto)
-                <option value="{{ $produto->id }}">{{ $produto->nome }}</option>
+                <option {{ $categoria->produtos->contains($produto) ? "selected" : "" }} value="{{ $produto->id }}">{{ $produto->nome }}</option>
             @endforeach
         </select>
     </div>
