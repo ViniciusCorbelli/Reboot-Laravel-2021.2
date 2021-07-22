@@ -10,7 +10,7 @@
 
     <div class="form-group col-sm-6">
         <label for="produtos_id" class="required">Produtos</label>
-        <select  class="form-control" name="produtos_id[]" value="" multiple>
+        <select  class="form-control" name="produtos_id[]" value="{{ old('produtos_id') }}" multiple>
             @foreach($produtos as $produto)
                 <option {{ $user->produtos()->find($produto->id) != null ? 'selected' : "" }} value="{{ $produto->id }}">{{ $produto->name }}</option>
             @endforeach

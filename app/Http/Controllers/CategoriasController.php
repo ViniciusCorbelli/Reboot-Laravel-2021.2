@@ -40,8 +40,17 @@ class CategoriasController extends Controller
     public function store(Request $request)
     {
         $categoria = Categorias::create($request->except('produtos_id'));
-        //$categoria->produtos()->sync($request->produtos_id);
-        //$categoria->save();
+        $produtos = [];
+        if($request->produto_id != null){
+            foreach ($request->produto_id as $produto) {
+                $produtos[] = Produtos::find($produto);
+            }
+    
+            $categoria->produtos()->saveMany($produtos);
+        }
+
+        $categoria->save();
+
         return redirect()->route('categorias.index')->with('sucess', true);
     }
 
@@ -80,14 +89,15 @@ class CategoriasController extends Controller
         $categoria->update($request->except('produto_id'));
 
         $produtos = [];
-        
-        foreach ($request->produto_id as $produto) {
-            $produtos[] = Produtos::find($produto);
-        }
 
-        $categoria->produtos()->saveMany($produtos);
+        if($request->produto_id != null){
+            foreach ($request->produto_id as $produto) {
+                $produtos[] = Produtos::find($produto);
+            }
+            $categoria->produtos()->saveMany($produtos);
+        } 
 
-        $categoria->save();
+        $categoria->produtos()->whereNotIn('id', $request->produto_id ?? [0])->update(['categoria_id' => null]);
 
         return redirect()->route('categorias.index')->with('sucess', true);
     }
