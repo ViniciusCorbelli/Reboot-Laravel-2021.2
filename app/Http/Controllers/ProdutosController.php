@@ -4,11 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Produtos;
 use App\Categorias;
+use App\Http\Requests\ProdutosRequest;
 use App\User;
 use Illuminate\Http\Request;
 
 class ProdutosController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->authorizeResource(Produtos::class, 'produto');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -39,7 +46,7 @@ class ProdutosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProdutosRequest $request)
     {
         $produto = Produtos::create($request->except('categoria_id', 'usuarios_id'));
         $produto->categoria()->associate($request->categoria_id);
@@ -57,7 +64,9 @@ class ProdutosController extends Controller
      */
     public function show(Produtos $produto)
     {
-        return view('admin.produtos.show', compact('produto'));
+        $categorias = Categorias::all();
+        $users = User::all();
+        return view('admin.produtos.show', compact('produto', 'categorias', 'users'));
     }
 
     /**
@@ -80,7 +89,7 @@ class ProdutosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Produtos $produto)
+    public function update(ProdutosRequest $request, Produtos $produto)
     {
         $produto->update($request->except('categoria_id', 'usuarios_id'));
         $produto->categoria()->associate($request->categoria_id);

@@ -10,7 +10,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">R$</span>
             </div>
-            <input type="number" name="preco" id="preco" class="form-control" required autofocus value="{{ old('preco',$produto->preco) }}">
+            <input step="0.1" type="number" name="preco" id="preco" class="form-control" required autofocus value="{{ old('preco',$produto->preco) }}">
         </div>
     </div>
 

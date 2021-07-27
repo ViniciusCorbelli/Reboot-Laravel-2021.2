@@ -2,7 +2,9 @@
 @section('content')
 
 @component('admin.components.table')
-    @slot('create', route('users.create'))
+    @can('create', App\User::class)
+        @slot('create', route('users.create'))
+    @endcan
     @slot('title', 'Usuários')
     @slot('head')
         <th>Nome</th>
@@ -11,21 +13,30 @@
     @endslot
     @slot('body')
         @foreach ($users as $user)
-            <tr>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td class="options">
-                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-success"><i class="fas fa-pen"></i></a>
-                    <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></a>
+            @can('view', $user)
+                <tr>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td class="options">
+                        @can('update', $user)
+                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-success"><i class="fas fa-pen"></i></a>
+                        @endcan
 
-                    <form class="form-delete" action="{{ route('users.destroy', $user->id) }}" method="post">
-                        @csrf
-                        @method('delete')
+                        @can('view', $user)
+                            <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></a>
+                        @endcan
+                        
+                        @can('delete', $user)
+                            <form class="form-delete" action="{{ route('users.destroy', $user->id) }}" method="post">
+                                @csrf
+                                @method('delete')
 
-                        <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                    </form>
-                </td>
-            </tr>
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </form>
+                        @endcan
+                    </td>
+                </tr>
+            @endcan
         @endforeach
     @endslot
 @endcomponent

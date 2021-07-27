@@ -12,7 +12,8 @@ class User extends Authenticatable
 
     protected $guarded = [];
 
-    public function produtos(){
+    public function produtos()
+    {
         return $this->belongsToMany(User::class, 'produtos_user',  'user_id', 'produto_id')->withPivot('nota');
     }
 }

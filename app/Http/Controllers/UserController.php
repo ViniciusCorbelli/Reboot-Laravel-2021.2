@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\userRequest;
 use App\User;
 use App\Produtos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+
+    public function __construct() {
+        $this->authorizeResource(User::class, 'user');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,11 +44,15 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        
-        $data = $request->except('produtos_id');
+        $data = $request->except('produtos_id', 'adm');
         $data['password'] = bcrypt($data['password']);
+
+        if (Auth::user()->adm == true) {
+            $data['adm'] = $request->adm == "on" ? true : false;
+        }
+
         $user = User::create($data);
         $user->produtos()->syncWithoutDetaching([1 => ['nota' => 5]]);
         $user->save();
@@ -57,7 +68,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('admin.users.show', compact('user'));
+        $produtos = Produtos::all();
+        return view('admin.users.show', compact('user', 'produtos'));
     }
 
     /**
@@ -79,11 +91,15 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UserRequest $request, User $user)
     {
-        $data = $request->except('produtos_id');
+        $data = $request->except('produtos_id', 'adm');
         $data['password'] = bcrypt($data['password']);
        
+        if (Auth::user()->adm) {
+            $data['adm'] = $request->adm == "on" ? true : false;
+        }
+
         $user->update($data);
         $user->produtos()->syncWithoutDetaching($request->produtos_id);
         $user->save();

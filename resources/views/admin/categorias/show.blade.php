@@ -12,3 +12,10 @@
         @endslot
     @endcomponent
 @endsection
+
+@push('scripts')
+    <script>
+        $('.form-control').attr('readonly', true)
+        $('.controlselect').attr('readonly', true)
+    </script>
+@endpush

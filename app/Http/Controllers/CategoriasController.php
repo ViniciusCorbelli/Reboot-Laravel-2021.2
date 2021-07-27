@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Categorias;
+use App\Http\Requests\CategoriasRequest;
 use App\Produtos;
 use Illuminate\Http\Request;
 
 class CategoriasController extends Controller
 {
+
+    public function __construct() {
+        $this->authorizeResource(Categorias::class, 'categoria');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +43,7 @@ class CategoriasController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoriasRequest $request)
     {
         $categoria = Categorias::create($request->except('produtos_id'));
         $produtos = [];
@@ -62,7 +68,8 @@ class CategoriasController extends Controller
      */
     public function show(Categorias $categoria)
     {
-        return view('admin.categorias.show', compact('categoria'));
+        $produtos = Produtos::all();
+        return view('admin.categorias.show', compact('categoria', 'produtos'));
     }
 
     /**
@@ -84,7 +91,7 @@ class CategoriasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Categorias $categoria)
+    public function update(CategoriasRequest $request, Categorias $categoria)
     {
         $categoria->update($request->except('produto_id'));
 
